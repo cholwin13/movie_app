@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:movie_app_1/network/http_movie_data_agent_impl.dart';
+import 'package:movie_app_1/network/dataagents/http_movie_data_agent_impl.dart';
 import 'package:movie_app_1/pages/home_page.dart';
 
+import 'network/dataagents/dio_movie_data_agent_impl.dart';
+import 'network/dataagents/retrofit_data_agent_impl.dart';
 import 'pages/movie_detail_page.dart';
 
 void main() {
-  HttpMovieDataAgentImpl().getNowPlayingMovie(1);
+  //DioMovieDataAgentImpl().getNowPlayingMovies(1);
   runApp(const MyApp());
 }
 

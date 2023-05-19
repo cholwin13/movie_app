@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app_1/data/vos/actor_vo.dart';
+import 'package:movie_app_1/network/api_constants.dart';
 
 import '../resources/dimens.dart';
 
 class ActorView extends StatelessWidget {
+  final ActorVO? actor;
+
+  ActorView({
+    required this.actor,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -11,13 +19,17 @@ class ActorView extends StatelessWidget {
       child: Stack(
         children: [
           Positioned.fill(
-            child: ActorImageView(),
+            child: ActorImageView(
+              actorProfilePath: actor?.profile_path ?? "",
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(MARGIN_MEDIUM),
             child: FavouriteButtonView(),
           ),
-          ActorNameAndLikeView(),
+          ActorNameAndLikeView(
+            actorName: actor?.name ?? "",
+          ),
         ],
       ),
     );
@@ -25,15 +37,18 @@ class ActorView extends StatelessWidget {
 }
 
 class ActorImageView extends StatelessWidget {
-  const ActorImageView({
-    Key? key,
-  }) : super(key: key);
+  final String actorProfilePath;
+
+  ActorImageView({required this.actorProfilePath});
 
   @override
   Widget build(BuildContext context) {
-    return Image(
-      image: AssetImage("assets/images/view1.jpg"),
-      fit: BoxFit.cover,
+    // return Image(
+    //   image: AssetImage("assets/images/view1.jpg"),
+    //   fit: BoxFit.cover,
+    // );
+    return Image.network(
+      "$IMAGE_BASE_URL$actorProfilePath",
     );
   }
 }
@@ -56,9 +71,9 @@ class FavouriteButtonView extends StatelessWidget {
 }
 
 class ActorNameAndLikeView extends StatelessWidget {
-  const ActorNameAndLikeView({
-    Key? key,
-  }) : super(key: key);
+  final String actorName;
+
+  ActorNameAndLikeView({required this.actorName});
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +89,7 @@ class ActorNameAndLikeView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Xiao Zhan",
+              actorName,
               style: TextStyle(
                 color: Colors.red,
                 fontWeight: FontWeight.w700,

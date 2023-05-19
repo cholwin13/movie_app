@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app_1/data/vos/movie_vo.dart';
+import 'package:movie_app_1/network/api_constants.dart';
 import 'package:movie_app_1/resources/dimens.dart';
 
 import '../resources/colors.dart';
@@ -6,20 +8,28 @@ import '../widgets/gradient_view.dart';
 import '../widgets/play_button_view.dart';
 
 class BannerView extends StatelessWidget {
+  final MovieVO? movie;
+
+  BannerView({required this.movie});
+
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Stack(
         children: [
           Positioned.fill(
-            child: BannerImageView(),
+            child: BannerImageView(
+              imageUrl: movie?.posterPath ?? "",
+            ),
           ),
           Positioned.fill(
             child: GradientView(),
           ),
           Align(
             alignment: Alignment.bottomLeft,
-            child: BannerTitleView(),
+            child: BannerTitleView(
+              title: movie?.title ?? "",
+            ),
           ),
           Align(
             alignment: Alignment.center,
@@ -32,9 +42,9 @@ class BannerView extends StatelessWidget {
 }
 
 class BannerTitleView extends StatelessWidget {
-  const BannerTitleView({
-    Key? key,
-  }) : super(key: key);
+  final String title;
+
+  BannerTitleView({required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +55,7 @@ class BannerTitleView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "The Wolverine 2030",
+            title,
             style: TextStyle(
               color: Colors.white,
               fontSize: TEXT_HEADING_1X,
@@ -67,14 +77,18 @@ class BannerTitleView extends StatelessWidget {
 }
 
 class BannerImageView extends StatelessWidget {
-  const BannerImageView({
-    Key? key,
-  }) : super(key: key);
+  final String imageUrl;
+
+  BannerImageView({required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
-    return Image(
-      image: AssetImage("assets/images/sean.jpg"),
+    // return Image(
+    //   image: AssetImage("assets/images/sean.jpg"),
+    //   fit: BoxFit.cover,
+    // );
+    return Image.network(
+      "$IMAGE_BASE_URL$imageUrl",
       fit: BoxFit.cover,
     );
   }
