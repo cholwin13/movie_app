@@ -42,9 +42,10 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     _movieModal.getMovieDetails(widget.movieId)?.then((movieDetails) {
       setState(() {
         this.movieDetails = movieDetails;
+        debugPrint("movie detail Log ===> ${movieDetails}");
       });
     }).catchError((error) {
-      debugPrint(error.toString());
+      debugPrint("Movie Detail CAtch error ===> ${error}");
     });
 
     _movieModal.getCreditsByMovie(widget.movieId)?.then((castAndcrew) {
@@ -68,7 +69,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
           slivers: [
             MovieDetailSliverAppBarView(
               () => Navigator.pop(context),
-              movie: this.movieDetails,
+              movie: movieDetails,
             ),
             SliverList(
               delegate: SliverChildListDelegate([

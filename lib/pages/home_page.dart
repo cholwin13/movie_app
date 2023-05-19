@@ -360,7 +360,7 @@ class BestPopularMovieAndSerialsSectionView extends StatelessWidget {
         SizedBox(height: MARGIN_MEDIUM_2),
         HorizontalMovieListView(
           onTapMovie: (movieId) => this.onTapMovie(movieId),
-          movieList: this.nowPlayingMovies,
+          movieList: nowPlayingMovies,
         ),
       ],
     );
@@ -380,7 +380,7 @@ class HorizontalMovieListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: MOVIE_LIST_HEIGHT,
-      child: (movieList != "")
+      child: (movieList != null)
           ? ListView.builder(
               scrollDirection: Axis.horizontal,
               padding: EdgeInsets.only(left: MARGIN_MEDIUM_2),

@@ -53,7 +53,7 @@ class MovieModalImpl extends MovieModal {
   }
 
   @override
-  Future<MovieVO>? getMovieDetails(int movieId) {
-    return getMovieDetails(movieId);
+  Future<MovieVO?>? getMovieDetails(int movieId) {
+    return _dataAgent.getMovieDetails(movieId);
   }
 }
