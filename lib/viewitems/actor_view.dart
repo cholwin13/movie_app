@@ -28,7 +28,7 @@ class ActorView extends StatelessWidget {
             child: FavouriteButtonView(),
           ),
           ActorNameAndLikeView(
-            actorName: actor?.name ?? "",
+            actorName: actor?.name ?? "Actor NAme",
           ),
         ],
       ),
@@ -48,7 +48,8 @@ class ActorImageView extends StatelessWidget {
     //   fit: BoxFit.cover,
     // );
     return Image.network(
-      "$IMAGE_BASE_URL$actorProfilePath",
+      "$IMAGE_BASE_URL${actorProfilePath}",
+      fit: BoxFit.cover,
     );
   }
 }

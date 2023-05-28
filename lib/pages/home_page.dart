@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     ///Now Playing Movies
-    movieModel.getNowPlayingMovies()?.then((movieList) {
+    movieModel.getNowPlayingMovies(1)?.then((movieList) {
       setState(() {
         getNowPlayingMovies = movieList;
       });
@@ -46,8 +46,17 @@ class _HomePageState extends State<HomePage> {
       debugPrint("Error In Home Page ======> ${error.toString()} ");
     });
 
+    /// Now Playing Movis from database
+    movieModel.getNowPlayingMoviesFromDatabase().then((movieList) {
+      setState(() {
+        getNowPlayingMovies = movieList;
+      });
+    }).catchError((error) {
+      debugPrint("Now playing Movie DB error ====> ${error.toString()}");
+    });
+
     ///Popular Movies
-    movieModel.getPopularMovies()?.then((movieList) {
+    movieModel.getPopularMovies(1)?.then((movieList) {
       setState(() {
         popularMovies = movieList;
       });
@@ -55,23 +64,55 @@ class _HomePageState extends State<HomePage> {
       debugPrint(error.toString());
     });
 
+    /// Popular Movies From Database
+    movieModel.getPopularMoviesFromDatabase().then((movieList) {
+      setState(() {
+        popularMovies = movieList;
+      });
+    }).catchError((error) {
+      debugPrint("Popular Movies DB Error ====> ${error.toString()}");
+    });
+
     ///Genres
     movieModel.getGenres()?.then((genres) {
       setState(() {
         this.genres = genres;
+
+        ///Movie By Genre
+        _getMoviesByGenre(genres?.first.id ?? 0);
       });
-      _getMoviesByGenre(genres?.first.id ?? 0);
     }).catchError((error) {
-      debugPrint(error.toString());
+      debugPrint("GEnre Network Err ===> ${error.toString()}");
     });
 
-    ///top rated movies
-    movieModel.getTopRatedMovies()?.then((movieList) {
+    /// Genre from Database
+    movieModel.getGenresFromDatabase().then((genres) {
+      setState(() {
+        this.genres = genres;
+
+        /// Movie By Genre
+        _getMoviesByGenre(genres.first.id ?? 0);
+      });
+    }).catchError((error) {
+      debugPrint("Genre DB Error ====> ${error.toString()}");
+    });
+
+    ///top rated movies (ShowCase)
+    movieModel.getTopRatedMovies(1)?.then((movieList) {
       setState(() {
         topRatedMovies = movieList;
       });
     }).catchError((error) {
       debugPrint(error.toString());
+    });
+
+    /// top rated movies from databse (ShowCase)
+    movieModel.getTopRatedMoviesFromDatabase().then((movieList) {
+      setState(() {
+        topRatedMovies = movieList;
+      });
+    }).catchError((error) {
+      debugPrint("Top rated DB error ===> ${error.toString()}");
     });
 
     ///Actors
@@ -83,6 +124,15 @@ class _HomePageState extends State<HomePage> {
       debugPrint(error.toString());
     });
 
+    /// Actors From Database
+    movieModel.getAllActorsFromDatabase().then((actorList) {
+      setState(() {
+        this.actors = actorList;
+      });
+    }).catchError((error) {
+      debugPrint("Acror DB error ===> ${error.toString()}");
+    });
+
     super.initState();
   }
 
@@ -92,7 +142,7 @@ class _HomePageState extends State<HomePage> {
         this.moviesByGenre = movieByGenre;
       });
     }).catchError((error) {
-      debugPrint(error.toString());
+      debugPrint("GEt Movie By Genre Error====>${error.toString()}");
     });
   }
 
@@ -227,7 +277,7 @@ class GenreSectionView extends StatelessWidget {
               tabs: genreList
                       ?.map(
                         (genre) => Tab(
-                          child: Text(genre.name ?? ""),
+                          child: Text(genre.name ?? "Genre Name"),
                         ),
                       )
                       .toList() ??
@@ -440,7 +490,8 @@ class _BannerSectionViewState extends State<BannerSectionView> {
         ),
         SizedBox(height: MARGIN_MEDIUM_2),
         DotsIndicator(
-          dotsCount: widget.movieList?.length ?? 1,
+          // dotsCount: widget.movieList?.length ?? 1,
+          dotsCount: 2,
           position: _position,
           decorator: DotsDecorator(
             color: HOME_SCREEN_BANNER_DOTS_INACTIVE_COLOR,
