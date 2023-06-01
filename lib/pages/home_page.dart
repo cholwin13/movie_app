@@ -38,13 +38,13 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     ///Now Playing Movies
-    movieModel.getNowPlayingMovies(1)?.then((movieList) {
-      setState(() {
-        getNowPlayingMovies = movieList;
-      });
-    }).catchError((error) {
-      debugPrint("Error In Home Page ======> ${error.toString()} ");
-    });
+    // movieModel.getNowPlayingMovies(1)?.then((movieList) {
+    //   setState(() {
+    //     getNowPlayingMovies = movieList;
+    //   });
+    // }).catchError((error) {
+    //   debugPrint("Error In Home Page ======> ${error.toString()} ");
+    // });
 
     /// Now Playing Movis from database
     movieModel.getNowPlayingMoviesFromDatabase().then((movieList) {
@@ -98,13 +98,13 @@ class _HomePageState extends State<HomePage> {
     });
 
     ///top rated movies (ShowCase)
-    movieModel.getTopRatedMovies(1)?.then((movieList) {
-      setState(() {
-        topRatedMovies = movieList;
-      });
-    }).catchError((error) {
-      debugPrint(error.toString());
-    });
+    // movieModel.getTopRatedMovies(1)?.then((movieList) {
+    //   setState(() {
+    //     topRatedMovies = movieList;
+    //   });
+    // }).catchError((error) {
+    //   debugPrint(error.toString());
+    // });
 
     /// top rated movies from databse (ShowCase)
     movieModel.getTopRatedMoviesFromDatabase().then((movieList) {

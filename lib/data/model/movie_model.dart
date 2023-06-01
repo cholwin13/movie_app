@@ -4,7 +4,7 @@ import 'package:movie_app_1/data/vos/actor_vo.dart';
 
 abstract class MovieModal {
   //Network
-  Future<List<MovieVO>?>? getNowPlayingMovies(int page);
+  void getNowPlayingMovies(int page);
   Future<List<MovieVO>?>? getPopularMovies(int page);
   Future<List<MovieVO>?>? getTopRatedMovies(int page);
   Future<List<GenreVO>?>? getGenres();
