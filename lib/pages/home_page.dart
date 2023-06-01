@@ -1,9 +1,7 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
-import 'package:movie_app_1/data/model/movie_model.dart';
 import 'package:movie_app_1/data/model/movie_model_impl.dart';
 import 'package:movie_app_1/pages/movie_detail_page.dart';
-import 'package:movie_app_1/viewitems/actor_view.dart';
 import 'package:movie_app_1/viewitems/banner_view.dart';
 import 'package:movie_app_1/viewitems/movie_view.dart';
 import 'package:movie_app_1/viewitems/show_case_view.dart';
@@ -12,149 +10,14 @@ import 'package:movie_app_1/widgets/title_text.dart';
 import 'package:movie_app_1/widgets/title_text_with_seemore_view.dart';
 import 'package:movie_app_1/data/vos/movie_vo.dart';
 import 'package:movie_app_1/data/vos/genre_vo.dart';
-import 'package:movie_app_1/data/vos/actor_vo.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 import '../resources/colors.dart';
 import '../resources/dimens.dart';
 import '../resources/strings.dart';
 import '../widgets/actor_and_creator_section_view.dart';
 
-class HomePage extends StatefulWidget {
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  MovieModal movieModel = MovieModalImpl();
-
-  ///State Variables
-  List<MovieVO>? getNowPlayingMovies;
-  List<MovieVO>? popularMovies;
-  List<MovieVO>? topRatedMovies;
-  List<MovieVO>? moviesByGenre;
-  List<GenreVO>? genres;
-  List<ActorVO>? actors;
-
-  @override
-  void initState() {
-    ///Now Playing Movies
-    // movieModel.getNowPlayingMovies(1)?.then((movieList) {
-    //   setState(() {
-    //     getNowPlayingMovies = movieList;
-    //   });
-    // }).catchError((error) {
-    //   debugPrint("Error In Home Page ======> ${error.toString()} ");
-    // });
-
-    /// Now Playing Movis from database
-    movieModel.getNowPlayingMoviesFromDatabase().then((movieList) {
-      setState(() {
-        getNowPlayingMovies = movieList;
-      });
-    }).catchError((error) {
-      debugPrint("Now playing Movie DB error ====> ${error.toString()}");
-    });
-
-    ///Popular Movies
-    movieModel.getPopularMovies(1)?.then((movieList) {
-      setState(() {
-        popularMovies = movieList;
-      });
-    }).catchError((error) {
-      debugPrint(error.toString());
-    });
-
-    /// Popular Movies From Database
-    movieModel.getPopularMoviesFromDatabase().then((movieList) {
-      setState(() {
-        popularMovies = movieList;
-      });
-    }).catchError((error) {
-      debugPrint("Popular Movies DB Error ====> ${error.toString()}");
-    });
-
-    ///Genres
-    movieModel.getGenres()?.then((genres) {
-      setState(() {
-        this.genres = genres;
-
-        ///Movie By Genre
-        _getMoviesByGenre(genres?.first.id ?? 0);
-      });
-    }).catchError((error) {
-      debugPrint("GEnre Network Err ===> ${error.toString()}");
-    });
-
-    /// Genre from Database
-    movieModel.getGenresFromDatabase().then((genres) {
-      setState(() {
-        this.genres = genres;
-
-        /// Movie By Genre
-        _getMoviesByGenre(genres.first.id ?? 0);
-      });
-    }).catchError((error) {
-      debugPrint("Genre DB Error ====> ${error.toString()}");
-    });
-
-    ///top rated movies (ShowCase)
-    // movieModel.getTopRatedMovies(1)?.then((movieList) {
-    //   setState(() {
-    //     topRatedMovies = movieList;
-    //   });
-    // }).catchError((error) {
-    //   debugPrint(error.toString());
-    // });
-
-    /// top rated movies from databse (ShowCase)
-    movieModel.getTopRatedMoviesFromDatabase().then((movieList) {
-      setState(() {
-        topRatedMovies = movieList;
-      });
-    }).catchError((error) {
-      debugPrint("Top rated DB error ===> ${error.toString()}");
-    });
-
-    ///Actors
-    movieModel.getActors(1)?.then((actors) {
-      setState(() {
-        this.actors = actors;
-      });
-    }).catchError((error) {
-      debugPrint(error.toString());
-    });
-
-    /// Actors From Database
-    movieModel.getAllActorsFromDatabase().then((actorList) {
-      setState(() {
-        this.actors = actorList;
-      });
-    }).catchError((error) {
-      debugPrint("Acror DB error ===> ${error.toString()}");
-    });
-
-    super.initState();
-  }
-
-  void _getMoviesByGenre(int genreId) {
-    movieModel.getMoviesByGenre(genreId)?.then((movieByGenre) {
-      setState(() {
-        this.moviesByGenre = movieByGenre;
-      });
-    }).catchError((error) {
-      debugPrint("GEt Movie By Genre Error====>${error.toString()}");
-    });
-  }
-
-  List<String> genreList = [
-    "Action",
-    "Adventure",
-    "Horror",
-    "Comedy",
-    "Thriller",
-    "Drama",
-  ];
-
+class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -189,41 +52,61 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              BannerSectionView(
-                movieList: popularMovies?.take(5).toList(),
+              ScopedModelDescendant<MovieModalImpl>(
+                builder: (BuildContext context, Widget? child,
+                    MovieModalImpl model) {
+                  return BannerSectionView(
+                    movieList: model.mPopularMovies?.take(5).toList() ?? [],
+                  );
+                },
               ),
               SizedBox(height: MARGIN_LAERGE),
-              BestPopularMovieAndSerialsSectionView(
-                onTapMovie: (movieId) =>
-                    //Navigate to detail screen
-                    _navigateToMovieDetailScreen(context, movieId),
-                nowPlayingMovies: getNowPlayingMovies,
+              ScopedModelDescendant<MovieModalImpl>(
+                builder: (BuildContext context, Widget? child,
+                    MovieModalImpl model) {
+                  return BestPopularMovieAndSerialsSectionView(
+                    onTapMovie: (movieId) =>
+                        //Navigate to detail screen
+                        _navigateToMovieDetailScreen(context, movieId!, model),
+                    nowPlayingMovies: model.mNowPlayingMovieList,
+                  );
+                },
               ),
               SizedBox(height: MARGIN_LAERGE),
               CheckSectionShowTimeSectionView(),
               SizedBox(height: MARGIN_LAERGE),
-              GenreSectionView(
-                onTapMovie: (movieId) =>
-                    _navigateToMovieDetailScreen(context, movieId),
-                genreList: genres,
-                moviesByGenre: moviesByGenre,
-                onChooseGenre: (genreId) {
-                  if (genreId != null) {
-                    _getMoviesByGenre(genreId);
-                  }
+              ScopedModelDescendant<MovieModalImpl>(
+                builder: (BuildContext context, Widget? child,
+                    MovieModalImpl model) {
+                  return GenreSectionView(
+                    onTapMovie: (movieId) =>
+                        _navigateToMovieDetailScreen(context, movieId!, model),
+                    genreList: model.mGenresList,
+                    moviesByGenre: model.mMoviesByGenreList,
+                    onChooseGenre: (genreId) =>
+                        model.getMoviesByGenre(genreId!),
+                  );
                 },
               ),
               //HorizontalMovieListView(),
               SizedBox(height: MARGIN_LAERGE),
-              ShowCasesSection(
-                topRatedMovies: topRatedMovies,
+              ScopedModelDescendant<MovieModalImpl>(
+                builder: (BuildContext context, Widget? child,
+                    MovieModalImpl model) {
+                  return ShowCasesSection(
+                    topRatedMovies: model.mTopRatedMovies,
+                  );
+                },
               ),
               SizedBox(height: MARGIN_LAERGE),
-              ActorAndCreatorSectionView(
-                BEST_ACTORS_TITLE,
-                BEST_ACTORS_SEE_MORE,
-                actorsList: actors,
-              ),
+              ScopedModelDescendant<MovieModalImpl>(builder:
+                  (BuildContext context, Widget? child, MovieModalImpl model) {
+                return ActorAndCreatorSectionView(
+                  BEST_ACTORS_TITLE,
+                  BEST_ACTORS_SEE_MORE,
+                  actorsList: model.mActors,
+                );
+              }),
               SizedBox(height: MARGIN_LAERGE),
             ],
           ),
@@ -232,17 +115,17 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _navigateToMovieDetailScreen(BuildContext context, int? movieId) {
-    if (movieId != null) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MovieDetailPage(
-            movieId: movieId,
-          ),
-        ),
-      );
-    }
+  void _navigateToMovieDetailScreen(
+      BuildContext context, int movieId, MovieModalImpl model) {
+    model.getMovieDetails(movieId);
+    model.getMovieDetailsFromDatabase(movieId);
+    model.getCreditsByMovie(movieId);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MovieDetailPage(movieId),
+      ),
+    );
   }
 }
 

@@ -1,23 +1,24 @@
 import 'package:movie_app_1/data/vos/movie_vo.dart';
 import 'package:movie_app_1/data/vos/genre_vo.dart';
 import 'package:movie_app_1/data/vos/actor_vo.dart';
+import 'package:scoped_model/scoped_model.dart';
 
-abstract class MovieModal {
+abstract class MovieModal extends Model {
   //Network
   void getNowPlayingMovies(int page);
-  Future<List<MovieVO>?>? getPopularMovies(int page);
-  Future<List<MovieVO>?>? getTopRatedMovies(int page);
-  Future<List<GenreVO>?>? getGenres();
-  Future<List<MovieVO>?>? getMoviesByGenre(int genreId);
-  Future<List<ActorVO>?>? getActors(int page);
-  Future<MovieVO?>? getMovieDetails(int movieId);
-  Future<List<List<ActorVO>?>?>? getCreditsByMovie(int movieId);
+  void getPopularMovies(int page);
+  void getTopRatedMovies(int page);
+  void getGenres();
+  void getMoviesByGenre(int genreId);
+  void getActors(int page);
+  void getMovieDetails(int movieId);
+  void getCreditsByMovie(int movieId);
 
   // Database
-  Future<List<MovieVO>> getTopRatedMoviesFromDatabase();
-  Future<List<MovieVO>> getPopularMoviesFromDatabase();
-  Future<List<MovieVO>> getNowPlayingMoviesFromDatabase();
-  Future<List<GenreVO>> getGenresFromDatabase();
-  Future<List<ActorVO>> getAllActorsFromDatabase();
-  Future<MovieVO> getMovieDetailsFromDatabase(int movieId);
+  void getTopRatedMoviesFromDatabase();
+  void getPopularMoviesFromDatabase();
+  void getNowPlayingMoviesFromDatabase();
+  void getGenresFromDatabase();
+  void getAllActorsFromDatabase();
+  void getMovieDetailsFromDatabase(int movieId);
 }

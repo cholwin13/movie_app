@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:movie_app_1/data/model/movie_model_impl.dart';
 import 'package:movie_app_1/data/vos/actor_vo.dart';
 import 'package:movie_app_1/data/vos/collection_vo.dart';
 import 'package:movie_app_1/data/vos/date_vo.dart';
@@ -12,6 +13,7 @@ import 'package:movie_app_1/data/vos/spoken_language_vo.dart';
 import 'package:movie_app_1/network/dataagents/http_movie_data_agent_impl.dart';
 import 'package:movie_app_1/pages/home_page.dart';
 import 'package:movie_app_1/persistence/hive_constants.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 import 'network/dataagents/dio_movie_data_agent_impl.dart';
 import 'network/dataagents/retrofit_data_agent_impl.dart';
@@ -42,14 +44,17 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return ScopedModel(
+      model: MovieModalImpl(),
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: HomePage(),
+        //home: MovieDetailPage(),
       ),
-      home: HomePage(),
-      //home: MovieDetailPage(),
     );
   }
 }
