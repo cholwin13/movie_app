@@ -1,5 +1,6 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_app_1/blocs/home_bloc.dart';
 import 'package:movie_app_1/data/model/movie_model.dart';
 import 'package:movie_app_1/data/model/movie_model_impl.dart';
 import 'package:movie_app_1/pages/movie_detail_page.dart';
@@ -14,6 +15,7 @@ import 'package:movie_app_1/data/vos/movie_vo.dart';
 import 'package:movie_app_1/data/vos/genre_vo.dart';
 import 'package:movie_app_1/data/vos/actor_vo.dart';
 import 'package:flutter/foundation.dart';
+import 'package:provider/provider.dart';
 
 import '../resources/colors.dart';
 import '../resources/dimens.dart';
@@ -23,7 +25,8 @@ import '../widgets/actor_and_creator_section_view.dart';
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifier(
+    return ChangeNotifierProvider(
+      create: (context) => HomeBloc(),
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: PRIMARY_COLOR,
@@ -56,40 +59,52 @@ class HomePage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                BannerSectionView(
-                  movieList: popularMovies?.take(5).toList(),
+                Consumer<HomeBloc>(
+                  builder: (context, bloc, child) => BannerSectionView(
+                    // movieList: popularMovies?.take(5).toList(),
+                    movieList: bloc.mPopularMoviesList?.take(5).toList(),
+                  ),
                 ),
                 SizedBox(height: MARGIN_LAERGE),
-                BestPopularMovieAndSerialsSectionView(
-                  onTapMovie: (movieId) =>
-                      //Navigate to detail screen
-                      _navigateToMovieDetailScreen(context, movieId),
-                  nowPlayingMovies: getNowPlayingMovies,
+                Consumer<HomeBloc>(
+                  builder: (context, bloc, child) =>
+                      BestPopularMovieAndSerialsSectionView(
+                    onTapMovie: (movieId) =>
+                        //Navigate to detail screen
+                        _navigateToMovieDetailScreen(context, movieId),
+                    nowPlayingMovies: bloc.mNowPlayingMovieList,
+                  ),
                 ),
                 SizedBox(height: MARGIN_LAERGE),
                 CheckSectionShowTimeSectionView(),
                 SizedBox(height: MARGIN_LAERGE),
-                GenreSectionView(
-                  onTapMovie: (movieId) =>
-                      _navigateToMovieDetailScreen(context, movieId),
-                  genreList: genres,
-                  moviesByGenre: moviesByGenre,
-                  onChooseGenre: (genreId) {
-                    if (genreId != null) {
-                      _getMoviesByGenre(genreId);
-                    }
-                  },
+                Consumer<HomeBloc>(
+                  builder: (context, bloc, child) => GenreSectionView(
+                    onTapMovie: (movieId) =>
+                        _navigateToMovieDetailScreen(context, movieId),
+                    genreList: bloc.mGenreList ?? [],
+                    moviesByGenre: bloc.mMovieByGenreList,
+                    onChooseGenre: (genreId) {
+                      if (genreId != null) {
+                        bloc.onTapGenre(genreId);
+                      }
+                    },
+                  ),
                 ),
                 //HorizontalMovieListView(),
                 SizedBox(height: MARGIN_LAERGE),
-                ShowCasesSection(
-                  topRatedMovies: topRatedMovies,
+                Consumer<HomeBloc>(
+                  builder: (context, bloc, child) => ShowCasesSection(
+                    topRatedMovies: bloc.mShowCaseMovieList,
+                  ),
                 ),
                 SizedBox(height: MARGIN_LAERGE),
-                ActorAndCreatorSectionView(
-                  BEST_ACTORS_TITLE,
-                  BEST_ACTORS_SEE_MORE,
-                  actorsList: actors,
+                Consumer<HomeBloc>(
+                  builder: (context, bloc, child) => ActorAndCreatorSectionView(
+                    BEST_ACTORS_TITLE,
+                    BEST_ACTORS_SEE_MORE,
+                    actorsList: bloc.mActors,
+                  ),
                 ),
                 SizedBox(height: MARGIN_LAERGE),
               ],
