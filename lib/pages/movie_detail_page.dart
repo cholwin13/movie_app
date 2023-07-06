@@ -28,55 +28,56 @@ class MovieDetailPage extends StatelessWidget {
       child: Scaffold(
         body: Consumer<MovieDetailsBloc>(
             builder: (context, bloc, child) => Container(
-                  color: HOME_SCREN_BACKGROUND_COLOR,
-                  child: (bloc.mMovie != null)
-              ? CustomScrollView(
-                    slivers: [
-                      MovieDetailSliverAppBarView(
+                color: HOME_SCREN_BACKGROUND_COLOR,
+                child: (bloc.mMovie != null)
+                    ? CustomScrollView(
+                        slivers: [
+                          MovieDetailSliverAppBarView(
                             () => Navigator.pop(context),
-                        movie: bloc.mMovie,
-                      ),
-                      SliverList(
-                        delegate: SliverChildListDelegate([
-                          Container(
-                            margin: EdgeInsets.symmetric(
-                              horizontal: MARGIN_CARD_MEDIUM_2,
-                            ),
-                            // child: TrailerSection(
-                            //   genreList: bloc.mMovie
-                            //   // movieDetails?.getGenreListAsStringList() ??
-                            //   //     [],
-                            //   // storyLine: movieDetails?.overview ?? "",
-                            // ),
+                            movie: bloc.mMovie,
                           ),
-                          SizedBox(height: MARGIN_LAERGE),
-                          ActorAndCreatorSectionView(
-                            MOVIE_DETAIL_SCREEN_ACTOR_TITLE,
-                            "",
-                            seeMoreButtonVisibility: false,
-                            actorsList: this.cast,
-                          ),
-                          SizedBox(height: MARGIN_LAERGE),
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: MARGIN_MEDIUM_2,
-                            ),
-                            child: AboutFilmSectionView(
-                              movieVO: movieDetails,
-                            ),
-                          ),
-                          SizedBox(height: MARGIN_LAERGE),
-                          ActorAndCreatorSectionView(
-                            MOVIE_DETAIL_SCREEN_CREATOR_TITLE,
-                            MOVIE_DETAIL_SCREEN_CREATORS_SEEMORE,
-                            actorsList: this.crew,
-                          ),
-                        ]),
+                          SliverList(
+                            delegate: SliverChildListDelegate([
+                              Container(
+                                margin: EdgeInsets.symmetric(
+                                  horizontal: MARGIN_CARD_MEDIUM_2,
+                                ),
+                                // child: TrailerSection(
+                                //   genreList: bloc.mMovie
+                                //   // movieDetails?.getGenreListAsStringList() ??
+                                //   //     [],
+                                //   // storyLine: movieDetails?.overview ?? "",
+                                // ),
+                              ),
+                              SizedBox(height: MARGIN_LAERGE),
+                              ActorAndCreatorSectionView(
+                                MOVIE_DETAIL_SCREEN_ACTOR_TITLE,
+                                "",
+                                seeMoreButtonVisibility: false,
+                                actorsList: [],
+                                // actorsList: this.cast,
+                              ),
+                              SizedBox(height: MARGIN_LAERGE),
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: MARGIN_MEDIUM_2,
+                                ),
+                                // child: AboutFilmSectionView(
+                                //   // movieVO: movieDetails,
+                                // ),
+                              ),
+                              SizedBox(height: MARGIN_LAERGE),
+                              ActorAndCreatorSectionView(
+                                MOVIE_DETAIL_SCREEN_CREATOR_TITLE,
+                                MOVIE_DETAIL_SCREEN_CREATORS_SEEMORE,
+                                actorsList: const [],
+                                // actorsList: this.crew,
+                              ),
+                            ]),
+                          )
+                        ],
                       )
-                    ],
-                  )
-              : ,
-                )),
+                    : CircularProgressIndicator())),
       ),
     );
   }
