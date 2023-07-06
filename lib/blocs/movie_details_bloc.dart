@@ -24,7 +24,7 @@ class MovieDetailsBloc extends ChangeNotifier {
     });
 
     ///Movie Details From Database
-    mMovieModel.getMovieDetailsFromDatabase(movieId)?.then((movieDetails) {
+    mMovieModel.getMovieDetailsFromDatabase(movieId).then((movieDetails) {
       this.mMovie = movieDetails;
       notifyListeners();
     }).catchError((error) {
